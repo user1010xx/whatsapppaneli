@@ -1,0 +1,40 @@
+{
+  "users": [
+    {
+      "id": "546c17ac-8feb-48e9-9e68-03f7b172b8d9",
+      "username": "admin",
+      "fullName": "Sistem Admini",
+      "passwordHash": "scrypt$mxXxEM59V7FGVd5dWdF_cQ$rBbNyJeZ0OflO7THVyHpQY9H_FAOQOK5ed2n5NBxH-2rJmbsgfy6bvlCwoUJpe0ZVaQMlBi6Rj1QB2pxi1FUig",
+      "role": "admin",
+      "departmentId": "cd58085c-5c95-4bd8-8c30-b408e0a3ef52",
+      "active": true,
+      "createdAt": "2026-06-13T21:33:47.964Z",
+      "updatedAt": "2026-06-13T21:33:47.964Z"
+    }
+  ],
+  "departments": [
+    {
+      "id": "cd58085c-5c95-4bd8-8c30-b408e0a3ef52",
+      "name": "Genel",
+      "active": true,
+      "createdAt": "2026-06-13T21:33:47.964Z",
+      "updatedAt": "2026-06-13T21:33:47.964Z"
+    }
+  ],
+  "templates": [
+    {
+      "id": "2a987197-8bea-4064-ba78-64e12bce7507",
+      "title": "İlk Bilgilendirme",
+      "body": "Merhaba {{müşteri_adı}}, görüşmemize istinaden ürün bilgilerimizi sizinle paylaşıyorum.",
+      "departmentId": "cd58085c-5c95-4bd8-8c30-b408e0a3ef52",
+      "active": true,
+      "createdBy": null,
+      "createdAt": "2026-06-13T21:33:47.964Z",
+      "updatedAt": "2026-06-13T21:33:47.964Z"
+    }
+  ],
+  "whatsappAccounts": [],
+  "conversations": [],
+  "messages": [],
+  "auditLogs": []
+}

@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>WhatsApp Personel Paneli</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <main id="login" class="login">
+    <section class="login-card">
+      <h1>WhatsApp Personel Paneli</h1>
+      <p>Personel takip, QR oturum, şablon ve sohbet yönetimi</p>
+      <form id="loginForm">
+        <label>Kullanıcı adı <input name="username" autocomplete="username" required></label>
+        <label>Şifre <input name="password" type="password" autocomplete="current-password" required></label>
+        <button type="submit">Giriş yap</button>
+      </form>
+    </section>
+  </main>
+
+  <main id="app" class="app hidden">
+    <aside class="sidebar">
+      <div class="brand">
+        <strong>WP Panel</strong>
+        <span id="me"></span>
+      </div>
+      <nav>
+        <button data-view="dashboard" class="active">Operasyon Merkezi</button>
+        <button data-view="chat">Canlı Sohbet</button>
+        <button data-view="personnel">Personeller</button>
+        <button data-view="accounts">WhatsApp Hesapları</button>
+        <div id="staffAccountsMenu" class="nav-group hidden">
+          <button type="button" id="staffAccountsToggle" class="nav-parent">Hesaplar <span>▾</span></button>
+          <div id="staffAccountsSubmenu" class="nav-submenu"></div>
+        </div>
+        <button data-view="templates">Şablonlar</button>
+        <button data-view="users">Kullanıcı Yönetimi</button>
+        <button data-view="departments">Departmanlar</button>
+      </nav>
+      <button id="logout" class="ghost">Çıkış</button>
+    </aside>
+
+    <section class="content">
+      <header class="topbar">
+        <h2 id="viewTitle">Özet</h2>
+        <span id="status"></span>
+      </header>
+
+      <section id="dashboard" class="view">
+        <div class="hero">
+          <div>
+            <span class="eyebrow">Çağrı merkezi WhatsApp kontrol paneli</span>
+            <h1>Personel iletişimini tek merkezden yönetin</h1>
+            <p>Departman, personel, WhatsApp oturumu, sohbet ve şablon akışlarını gerçek zamanlı takip edin.</p>
+          </div>
+          <div class="hero-actions">
+            <button data-jump="chat">Sohbete git</button>
+            <button data-jump="accounts" class="secondary">Hesap ekle</button>
+          </div>
+        </div>
+        <div id="reportCards" class="cards"></div>
+        <div class="section-title">
+          <div>
+            <h3>Personel performansı</h3>
+            <p>Departman kapsamınıza göre aktif personel ve iletişim özeti</p>
+          </div>
+        </div>
+        <div id="reportUsers" class="table"></div>
+      </section>
+
+      <section id="personnel" class="view hidden">
+        <div class="section-title">
+          <div>
+            <h3>Personeller</h3>
+            <p>Personelleri, bağlı WhatsApp hesaplarını ve sohbet yoğunluğunu izleyin.</p>
+          </div>
+        </div>
+        <div id="personnelList" class="personnel-grid"></div>
+        <div id="personnelDetail" class="personnel-detail hidden"></div>
+      </section>
+
+      <section id="chat" class="view hidden chat-layout">
+        <div class="account-strip" id="chatAccountStrip"></div>
+        <div class="panel">
+          <h3>Sohbetler</h3>
+          <select id="chatAccountFilter"></select>
+          <div id="conversationList" class="list"></div>
+        </div>
+        <div class="conversation">
+          <div id="conversationHeader" class="conversation-header">Sohbet seçin</div>
+          <div id="messageList" class="messages"></div>
+          <form id="sendForm" class="composer">
+            <input id="customerPhone" placeholder="Alıcı telefon numarası (90...)">
+            <select id="templateSelect"></select>
+            <textarea id="messageText" placeholder="Manuel mesaj yaz" required></textarea>
+            <button>Gönder</button>
+          </form>
+        </div>
+      </section>
+
+      <section id="accounts" class="view hidden">
+        <div class="section-title">
+          <div>
+            <h3>WhatsApp hesapları</h3>
+            <p>Personel hesaplarını QR ile bağlayın, bağlantı durumlarını yönetin.</p>
+          </div>
+        </div>
+        <form id="accountForm" class="inline-form">
+          <input name="label" placeholder="Hesap adı" required>
+          <input name="phoneNumber" placeholder="Telefon etiketi">
+          <select name="userId" id="accountUserSelect"></select>
+          <button>Hesap ekle / QR oluştur</button>
+        </form>
+        <div id="accountList" class="grid"></div>
+      </section>
+
+      <section id="templates" class="view hidden">
+        <div class="section-title">
+          <div>
+            <h3>Hazır mesaj şablonları</h3>
+            <p>Departman bazlı kullanılacak hızlı cevap ve satış metinlerini yönetin.</p>
+          </div>
+        </div>
+        <form id="templateForm" class="stack-form">
+          <input name="title" placeholder="Şablon başlığı" required>
+          <select name="departmentId" id="templateDepartmentSelect"></select>
+          <textarea name="body" placeholder="Şablon metni. Örn: Merhaba {{müşteri_adı}}" required></textarea>
+          <button>Şablon ekle</button>
+        </form>
+        <div id="templateList" class="grid"></div>
+      </section>
+
+      <section id="users" class="view hidden">
+        <div class="section-title">
+          <div>
+            <h3>Kullanıcı yönetimi</h3>
+            <p>Admin, yönetici, denetçi ve personel kullanıcılarını buradan yönetin.</p>
+          </div>
+        </div>
+        <form id="userForm" class="user-create-card">
+          <div class="form-head">
+            <div>
+              <span class="eyebrow-dark">Yeni kullanıcı</span>
+              <h4>Kullanıcı kartı oluştur</h4>
+              <p>Manuel şifre yazabilir veya güvenli otomatik şifre üretebilirsiniz.</p>
+            </div>
+            <button type="button" id="generatePassword" class="secondary">Oto şifre üret</button>
+          </div>
+          <div class="form-grid">
+            <input name="username" placeholder="Kullanıcı adı" required>
+            <input name="fullName" placeholder="Ad soyad" required>
+            <div class="password-control">
+              <input name="password" id="userPassword" placeholder="Şifre" autocomplete="new-password" required>
+              <button type="button" id="copyPassword" class="ghost mini">Kopyala</button>
+            </div>
+            <select name="role">
+              <option value="staff">Personel</option>
+              <option value="auditor">Denetçi</option>
+              <option value="manager">Yönetici</option>
+              <option value="admin">Admin</option>
+            </select>
+            <select name="departmentId" id="userDepartmentSelect"></select>
+          </div>
+          <button class="wide-action">Kullanıcı ekle</button>
+        </form>
+        <div id="userList" class="user-grid"></div>
+      </section>
+
+      <section id="departments" class="view hidden">
+        <div class="section-title">
+          <div>
+            <h3>Departmanlar</h3>
+            <p>Yetki kapsamı ve operasyon ayrımı için departmanlarınızı düzenleyin.</p>
+          </div>
+        </div>
+        <form id="departmentForm" class="inline-form">
+          <input name="name" placeholder="Departman adı" required>
+          <button>Departman ekle</button>
+        </form>
+        <div id="departmentList" class="grid"></div>
+      </section>
+    </section>
+  </main>
+
+  <audio id="notifySound" preload="auto">
+    <source src="data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAESsAACJWAAACABAAZGF0YQAAAAA=" type="audio/wav">
+  </audio>
+  <script src="/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,30 @@
+{
+  "name": "whatsapp-personel-paneli",
+  "version": "1.0.0",
+  "description": "QR tabanlı çok kullanıcılı WhatsApp personel takip ve iletişim paneli",
+  "main": "src/server.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node src/server.js",
+    "start:baileys": "set WHATSAPP_PROVIDER=baileys&& node src/server.js",
+    "dev": "node src/server.js",
+    "test": "node --test",
+    "smoke": "node tests/smoke.js"
+  },
+  "keywords": [
+    "whatsapp",
+    "panel",
+    "call-center",
+    "crm"
+  ],
+  "author": "",
+  "license": "UNLICENSED",
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "@whiskeysockets/baileys": "^7.0.0-rc13",
+    "pino": "^10.3.1",
+    "qrcode": "^1.5.4"
+  }
+}

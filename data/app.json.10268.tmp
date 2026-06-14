@@ -1,0 +1,212 @@
+{
+  "users": [
+    {
+      "id": "bdd02c4e-5acb-41c1-944f-69a2a4beacd5",
+      "username": "admin",
+      "fullName": "Sistem Admini",
+      "passwordHash": "scrypt$dqvKGKEthMe-ZB6e6bSOKg$PEhPpVRt6M51P5LKeBWQWZaLYa5y_2cFt93uRASjvioau5mOkU9gtMwVdmGwJNzT7KRkR0zmb0gwlg_qo0DPFw",
+      "role": "admin",
+      "departmentId": "96115abe-afa5-453a-b96a-ba4131b3e07e",
+      "active": true,
+      "createdAt": "2026-06-13T12:22:18.346Z",
+      "updatedAt": "2026-06-13T12:22:18.346Z"
+    },
+    {
+      "id": "53c80e11-7452-4ab6-bf35-8aa12c4177af",
+      "username": "Melih",
+      "fullName": "Melih göüzpek",
+      "passwordHash": "scrypt$-tBxoUTvL-F6vIRV_GM-pA$helFzod9b71akJ2I2fUnVlSKf1c9YW2wvzdtLTB2MA9tmHjjBR2GXE9W5xJXItprvxxI3X4_WoqOnkMO5v8D2w",
+      "role": "admin",
+      "departmentId": "96115abe-afa5-453a-b96a-ba4131b3e07e",
+      "active": true,
+      "createdAt": "2026-06-13T13:00:08.591Z",
+      "updatedAt": "2026-06-13T13:00:08.591Z"
+    },
+    {
+      "id": "36853e30-0180-4ddf-8c9e-162af9800a59",
+      "username": "Test1",
+      "fullName": "ahmet mehmetoğlu",
+      "passwordHash": "scrypt$OBnZ6cPgLwrOD_SGZIHwQw$LopJGl7dYoNIy8TLa4anj4iHcDsvf1fBHo8iR7NqLlTCnjHcuqZxXwnjoFwnkLFzB6HRrXFjJZW6fKKNsmFu7w",
+      "role": "staff",
+      "departmentId": "c0d80910-28d3-4877-8b29-d9d787944b01",
+      "active": true,
+      "createdAt": "2026-06-13T13:20:46.211Z",
+      "updatedAt": "2026-06-13T13:20:46.211Z"
+    }
+  ],
+  "departments": [
+    {
+      "id": "96115abe-afa5-453a-b96a-ba4131b3e07e",
+      "name": "Genel",
+      "active": true,
+      "createdAt": "2026-06-13T12:22:18.346Z",
+      "updatedAt": "2026-06-13T12:22:18.346Z"
+    },
+    {
+      "id": "c0d80910-28d3-4877-8b29-d9d787944b01",
+      "name": "Dış As Ekip",
+      "active": true,
+      "createdAt": "2026-06-13T13:20:32.830Z",
+      "updatedAt": "2026-06-13T13:20:32.830Z"
+    }
+  ],
+  "templates": [
+    {
+      "id": "600f4e76-afed-4b83-9be9-8eaf1bb9fed0",
+      "title": "İlk Bilgilendirme",
+      "body": "Merhaba {{müşteri_adı}}, görüşmemize istinaden ürün bilgilerimizi sizinle paylaşıyorum.",
+      "departmentId": "96115abe-afa5-453a-b96a-ba4131b3e07e",
+      "active": true,
+      "createdBy": null,
+      "createdAt": "2026-06-13T12:22:18.346Z",
+      "updatedAt": "2026-06-13T12:22:18.346Z"
+    }
+  ],
+  "whatsappAccounts": [
+    {
+      "id": "0d5140a9-4c18-466c-8b0e-8a98c0c60f04",
+      "userId": "bdd02c4e-5acb-41c1-944f-69a2a4beacd5",
+      "departmentId": "96115abe-afa5-453a-b96a-ba4131b3e07e",
+      "label": "1",
+      "phoneNumber": "",
+      "status": "disconnected",
+      "statusReason": "QR yenileme için mevcut bağlantı kapatıldı",
+      "qrCode": null,
+      "active": true,
+      "createdAt": "2026-06-13T12:28:38.062Z",
+      "updatedAt": "2026-06-13T21:34:44.327Z",
+      "lastConnectedAt": "2026-06-13T21:34:44.322Z",
+      "lastDisconnectedAt": "2026-06-13T21:34:44.327Z",
+      "qrCreatedAt": "2026-06-13T21:34:44.317Z",
+      "connectionHealth": "disconnected",
+      "lastHeartbeatAt": "2026-06-13T21:34:44.322Z"
+    },
+    {
+      "id": "62dc2e14-4541-4deb-94ed-3fb62cc9fa83",
+      "userId": "36853e30-0180-4ddf-8c9e-162af9800a59",
+      "departmentId": "c0d80910-28d3-4877-8b29-d9d787944b01",
+      "label": "1",
+      "phoneNumber": "",
+      "status": "disconnected",
+      "statusReason": "Bağlantı kullanıcı tarafından kesildi",
+      "qrCode": null,
+      "active": true,
+      "createdAt": "2026-06-13T13:38:59.025Z",
+      "updatedAt": "2026-06-13T14:33:35.711Z",
+      "lastDisconnectedAt": "2026-06-13T14:33:35.711Z"
+    }
+  ],
+  "conversations": [],
+  "messages": [],
+  "auditLogs": [
+    {
+      "id": "9e9999c6-97fd-4ed2-a223-a95d348a0bee",
+      "actorId": "bdd02c4e-5acb-41c1-944f-69a2a4beacd5",
+      "action": "account.create",
+      "entity": "whatsappAccount",
+      "entityId": "0d5140a9-4c18-466c-8b0e-8a98c0c60f04",
+      "metadata": {
+        "userId": "bdd02c4e-5acb-41c1-944f-69a2a4beacd5"
+      },
+      "createdAt": "2026-06-13T12:28:38.064Z"
+    },
+    {
+      "id": "4901a9c0-4188-46ca-964b-8974d7f1983e",
+      "actorId": "bdd02c4e-5acb-41c1-944f-69a2a4beacd5",
+      "action": "user.create",
+      "entity": "user",
+      "entityId": "53c80e11-7452-4ab6-bf35-8aa12c4177af",
+      "metadata": {
+        "role": "admin",
+        "departmentId": "96115abe-afa5-453a-b96a-ba4131b3e07e"
+      },
+      "createdAt": "2026-06-13T13:00:08.593Z"
+    },
+    {
+      "id": "16f9e286-326e-4fae-8d43-016faca12bfe",
+      "actorId": "bdd02c4e-5acb-41c1-944f-69a2a4beacd5",
+      "action": "department.create",
+      "entity": "department",
+      "entityId": "c0d80910-28d3-4877-8b29-d9d787944b01",
+      "metadata": {},
+      "createdAt": "2026-06-13T13:20:32.831Z"
+    },
+    {
+      "id": "1715be43-d026-4fbb-91ab-f5692fd22633",
+      "actorId": "bdd02c4e-5acb-41c1-944f-69a2a4beacd5",
+      "action": "user.create",
+      "entity": "user",
+      "entityId": "36853e30-0180-4ddf-8c9e-162af9800a59",
+      "metadata": {
+        "role": "staff",
+        "departmentId": "c0d80910-28d3-4877-8b29-d9d787944b01"
+      },
+      "createdAt": "2026-06-13T13:20:46.212Z"
+    },
+    {
+      "id": "ec206b81-df39-4c88-8e6c-73ffc42165b1",
+      "actorId": "36853e30-0180-4ddf-8c9e-162af9800a59",
+      "action": "account.create",
+      "entity": "whatsappAccount",
+      "entityId": "62dc2e14-4541-4deb-94ed-3fb62cc9fa83",
+      "metadata": {
+        "userId": "36853e30-0180-4ddf-8c9e-162af9800a59"
+      },
+      "createdAt": "2026-06-13T13:38:59.028Z"
+    },
+    {
+      "id": "61c513cd-fa03-4b1d-b0a2-26000571a033",
+      "actorId": "36853e30-0180-4ddf-8c9e-162af9800a59",
+      "action": "account.disconnect",
+      "entity": "whatsappAccount",
+      "entityId": "62dc2e14-4541-4deb-94ed-3fb62cc9fa83",
+      "metadata": {},
+      "createdAt": "2026-06-13T14:19:11.175Z"
+    },
+    {
+      "id": "e8ec7f81-d506-42ca-8177-22f397fa4b89",
+      "actorId": "36853e30-0180-4ddf-8c9e-162af9800a59",
+      "action": "account.disconnect",
+      "entity": "whatsappAccount",
+      "entityId": "62dc2e14-4541-4deb-94ed-3fb62cc9fa83",
+      "metadata": {},
+      "createdAt": "2026-06-13T14:33:35.713Z"
+    },
+    {
+      "id": "d92860a2-cb9b-4b84-9879-49983ac7bd8c",
+      "actorId": "bdd02c4e-5acb-41c1-944f-69a2a4beacd5",
+      "action": "account.qr.confirm",
+      "entity": "whatsappAccount",
+      "entityId": "0d5140a9-4c18-466c-8b0e-8a98c0c60f04",
+      "metadata": {},
+      "createdAt": "2026-06-13T21:33:29.506Z"
+    },
+    {
+      "id": "279005a6-ed72-4dd0-af33-4f221124320c",
+      "actorId": "bdd02c4e-5acb-41c1-944f-69a2a4beacd5",
+      "action": "account.disconnect",
+      "entity": "whatsappAccount",
+      "entityId": "0d5140a9-4c18-466c-8b0e-8a98c0c60f04",
+      "metadata": {},
+      "createdAt": "2026-06-13T21:33:29.511Z"
+    },
+    {
+      "id": "e57702b8-1138-4588-b4df-631b43d353dd",
+      "actorId": "bdd02c4e-5acb-41c1-944f-69a2a4beacd5",
+      "action": "account.qr.refresh",
+      "entity": "whatsappAccount",
+      "entityId": "0d5140a9-4c18-466c-8b0e-8a98c0c60f04",
+      "metadata": {},
+      "createdAt": "2026-06-13T21:34:44.319Z"
+    },
+    {
+      "id": "262ad4da-fb3b-4d90-b1f6-2b5503f3cf49",
+      "actorId": "bdd02c4e-5acb-41c1-944f-69a2a4beacd5",
+      "action": "account.qr.confirm",
+      "entity": "whatsappAccount",
+      "entityId": "0d5140a9-4c18-466c-8b0e-8a98c0c60f04",
+      "metadata": {},
+      "createdAt": "2026-06-13T21:34:44.323Z"
+    }
+  ]
+}
