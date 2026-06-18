@@ -1,18 +1,21 @@
 {
   "name": "whatsapp-personel-paneli",
-  "version": "1.0.0",
-  "description": "QR tabanlı çok kullanıcılı WhatsApp personel takip ve iletişim paneli",
+  "version": "2.0.0",
+  "description": "WhatsApp Cloud API tabanlı çok kullanıcılı personel takip ve iletişim paneli",
   "main": "src/server.js",
   "type": "commonjs",
   "scripts": {
     "start": "node src/server.js",
-    "start:baileys": "set WHATSAPP_PROVIDER=baileys&& node src/server.js",
     "dev": "node src/server.js",
-    "test": "node --test",
-    "smoke": "node tests/smoke.js"
+    "test": "node --test tests/*.js",
+    "smoke": "node tests/smoke.js",
+    "reset-data": "node scripts/reset-panel-data.js",
+    "e2e": "playwright test",
+    "e2e:install": "playwright install chromium"
   },
   "keywords": [
     "whatsapp",
+    "cloud-api",
     "panel",
     "call-center",
     "crm"
@@ -23,8 +26,10 @@
     "node": ">=20"
   },
   "dependencies": {
-    "@whiskeysockets/baileys": "^7.0.0-rc13",
-    "pino": "^10.3.1",
-    "qrcode": "^1.5.4"
+    "ioredis": "^5.11.1",
+    "pg": "^8.21.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.61.0"
   }
 }

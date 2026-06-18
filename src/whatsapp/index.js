@@ -1,10 +1,7 @@
-const { MockWhatsappProvider } = require('./mockProvider');
-const { BaileysWhatsappProvider } = require('./baileysProvider');
+const { CloudApiProvider } = require('./cloudApiProvider');
 
-function createWhatsappProvider(name, store, eventHub, options = {}) {
-  if (name === 'mock') return new MockWhatsappProvider(store, eventHub);
-  if (name === 'baileys') return new BaileysWhatsappProvider(store, eventHub, options);
-  throw new Error(`Bilinmeyen WhatsApp sağlayıcısı: ${name}`);
+function createWhatsappProvider(store, eventHub, options = {}) {
+  return new CloudApiProvider(store, eventHub, options);
 }
 
 module.exports = { createWhatsappProvider };

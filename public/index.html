@@ -3,38 +3,54 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="WhatsApp Cloud API tabanlı personel iletişim ve operasyon paneli">
   <title>WhatsApp Personel Paneli</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;650;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/styles.css">
+  <script src="/js/helpers.js" defer></script>
 </head>
 <body>
   <main id="login" class="login">
-    <section class="login-card">
-      <h1>WhatsApp Personel Paneli</h1>
-      <p>Personel takip, QR oturum, şablon ve sohbet yönetimi</p>
-      <form id="loginForm">
-        <label>Kullanıcı adı <input name="username" autocomplete="username" required></label>
-        <label>Şifre <input name="password" type="password" autocomplete="current-password" required></label>
-        <button type="submit">Giriş yap</button>
-      </form>
+    <section class="login-shell">
+      <div class="login-brand">
+        <div class="login-logo" aria-hidden="true">WP</div>
+        <h1>WhatsApp Personel Paneli</h1>
+        <p class="login-tagline">Çağrı merkezi operasyonlarınızı tek ekrandan yönetin. Güvenli giriş ile panele erişin.</p>
+      </div>
+      <section class="login-card">
+        <div class="login-card-head">
+          <h2>Oturum aç</h2>
+          <p>Kurumsal hesabınızla devam edin</p>
+        </div>
+        <form id="loginForm" class="login-form">
+          <label class="field-label">Kullanıcı adı <input name="username" autocomplete="username" required placeholder="admin"></label>
+          <label class="field-label">Şifre <input name="password" type="password" autocomplete="current-password" required placeholder="••••••••"></label>
+          <button type="submit" class="login-submit">Giriş yap</button>
+        </form>
+      </section>
     </section>
   </main>
 
   <main id="app" class="app hidden">
     <aside class="sidebar">
       <div class="brand">
-        <strong>WP Panel</strong>
-        <span id="me"></span>
+        <div class="brand-mark" aria-hidden="true">WP</div>
+        <div class="brand-copy">
+          <strong>Operasyon Paneli</strong>
+          <span id="me"></span>
+        </div>
       </div>
-      <nav>
+      <nav class="sidebar-nav" aria-label="Ana menü">
         <button data-view="dashboard" class="active">Operasyon Merkezi</button>
         <button data-view="chat">Canlı Sohbet</button>
         <button data-view="personnel">Personeller</button>
-        <button data-view="accounts">WhatsApp Hesapları</button>
-        <div id="staffAccountsMenu" class="nav-group hidden">
-          <button type="button" id="staffAccountsToggle" class="nav-parent">Hesaplar <span>▾</span></button>
-          <div id="staffAccountsSubmenu" class="nav-submenu"></div>
-        </div>
+        <button data-view="cloudApi" id="navCloudApi">Cloud API Ayarları</button>
+        <button data-view="accounts" id="navAccounts">WhatsApp Hesapları</button>
         <button data-view="templates">Şablonlar</button>
+        <button data-view="staffAudit" id="navStaffAudit" class="hidden">Personel Denetim</button>
+        <button data-view="auditLogs" id="navAuditLogs" class="hidden">Denetim Günlüğü</button>
         <button data-view="users">Kullanıcı Yönetimi</button>
         <button data-view="departments">Departmanlar</button>
       </nav>
@@ -43,34 +59,51 @@
 
     <section class="content">
       <header class="topbar">
-        <h2 id="viewTitle">Özet</h2>
-        <span id="status"></span>
+        <div class="topbar-start">
+          <button type="button" id="mobileNavToggle" class="ghost mobile-nav-toggle" aria-label="Menü">☰</button>
+          <div class="topbar-titles">
+            <span class="topbar-eyebrow">Kontrol merkezi</span>
+            <h2 id="viewTitle">Özet</h2>
+          </div>
+        </div>
+        <span id="status" class="topbar-status" role="status" aria-live="polite"></span>
       </header>
 
-      <section id="dashboard" class="view">
-        <div class="hero">
+      <section id="dashboard" class="view page-view">
+        <div class="hero page-hero">
           <div>
             <span class="eyebrow">Çağrı merkezi WhatsApp kontrol paneli</span>
             <h1>Personel iletişimini tek merkezden yönetin</h1>
-            <p>Departman, personel, WhatsApp oturumu, sohbet ve şablon akışlarını gerçek zamanlı takip edin.</p>
+            <p>Departman, personel, WhatsApp Cloud API hatları, sohbet ve şablon akışlarını gerçek zamanlı takip edin.</p>
           </div>
           <div class="hero-actions">
             <button data-jump="chat">Sohbete git</button>
             <button data-jump="accounts" class="secondary">Hesap ekle</button>
           </div>
         </div>
+        <div id="staffMotivation" class="staff-motivation hidden"></div>
+        <div id="staffOpsFilter" class="staff-ops-filter hidden"></div>
         <div id="reportCards" class="cards"></div>
-        <div class="section-title">
+        <div class="section-title" id="reportSectionTitle">
           <div>
-            <h3>Personel performansı</h3>
-            <p>Departman kapsamınıza göre aktif personel ve iletişim özeti</p>
+            <h3 id="reportSectionHeading">Personel performansı</h3>
+            <p id="reportSectionDesc">Departman kapsamınıza göre aktif personel ve iletişim özeti</p>
           </div>
         </div>
         <div id="reportUsers" class="table"></div>
+        <div class="section-title template-contacts-head" id="templateContactsSection">
+          <div>
+            <h3>Şablon iletişim kayıtları</h3>
+            <p id="templateContactsDesc">Şablon mesajı gönderilen numaralar ve iletişim zamanları</p>
+          </div>
+          <button type="button" id="templateContactsExport" class="secondary hidden">Excel indir</button>
+        </div>
+        <div id="templateContactsFilter" class="staff-ops-filter template-contacts-filter"></div>
+        <div id="templateContactsTable" class="staff-audit-table-wrap"></div>
       </section>
 
-      <section id="personnel" class="view hidden">
-        <div class="section-title">
+      <section id="personnel" class="view page-view hidden">
+        <div class="section-title page-header">
           <div>
             <h3>Personeller</h3>
             <p>Personelleri, bağlı WhatsApp hesaplarını ve sohbet yoğunluğunu izleyin.</p>
@@ -80,7 +113,7 @@
         <div id="personnelDetail" class="personnel-detail hidden"></div>
       </section>
 
-      <section id="chat" class="view hidden chat-layout">
+      <section id="chat" class="view page-view hidden chat-layout">
         <div class="account-strip" id="chatAccountStrip"></div>
         <div class="panel">
           <h3>Sohbetler</h3>
@@ -88,54 +121,118 @@
           <div id="conversationList" class="list"></div>
         </div>
         <div class="conversation">
-          <div id="conversationHeader" class="conversation-header">Sohbet seçin</div>
+          <div id="conversationHeader" class="conversation-header empty">Bir sohbet seçin</div>
           <div id="messageList" class="messages"></div>
+          <div id="mediaPreview" class="media-preview hidden"></div>
+          <div id="windowNotice" class="window-notice hidden"></div>
+          <div id="templateVariables" class="template-vars hidden"></div>
           <form id="sendForm" class="composer">
             <input id="customerPhone" placeholder="Alıcı telefon numarası (90...)">
             <select id="templateSelect"></select>
-            <textarea id="messageText" placeholder="Manuel mesaj yaz" required></textarea>
-            <button>Gönder</button>
+            <button type="button" id="attachBtn" class="attach-btn" title="Dosya ekle (resim, video, belge)">📎</button>
+            <input type="file" id="mediaInput" class="hidden" accept="image/*,video/*,audio/*,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.zip,.rar">
+            <textarea id="messageText" placeholder="Manuel mesaj yaz"></textarea>
+            <button id="sendBtn">Gönder</button>
           </form>
         </div>
       </section>
 
-      <section id="accounts" class="view hidden">
-        <div class="section-title">
+      <section id="cloudApi" class="view page-view hidden">
+        <div class="section-title page-header">
           <div>
-            <h3>WhatsApp hesapları</h3>
-            <p>Personel hesaplarını QR ile bağlayın, bağlantı durumlarını yönetin.</p>
+            <h3>Cloud API Ayarları</h3>
+            <p>Meta kimlik bilgileri admin/yönetici tarafından girilir; tüm kullanıcılar durumu görür.</p>
           </div>
         </div>
-        <form id="accountForm" class="inline-form">
-          <input name="label" placeholder="Hesap adı" required>
-          <input name="phoneNumber" placeholder="Telefon etiketi">
-          <select name="userId" id="accountUserSelect"></select>
-          <button>Hesap ekle / QR oluştur</button>
+        <div id="cloudApiStatus" class="item cloudapi-status"></div>
+        <form id="cloudApiForm" class="stack-form hidden">
+          <div class="form-grid">
+            <input name="phoneNumberId" placeholder="Phone Number ID *" required>
+            <input name="wabaId" placeholder="WABA ID (opsiyonel)">
+            <input name="accessToken" placeholder="Access Token (değiştirmemek için boş bırakın)">
+            <input name="baseUrl" placeholder="Base URL (varsayılan Meta Graph v21.0)">
+            <input name="webhookVerifyToken" placeholder="Webhook Verify Token">
+            <input name="appSecret" placeholder="App Secret (değiştirmemek için boş bırakın)">
+          </div>
+          <button>Kaydet ve bağlantıyı doğrula</button>
+        </form>
+      </section>
+
+      <section id="accounts" class="view page-view hidden">
+        <div class="section-title page-header">
+          <div>
+            <h3 id="accountsTitle">WhatsApp Hesapları</h3>
+            <p id="accountsHelp">Personel yalnızca telefon numarası yazarak hesabını açar ve mesajlaşmaya başlar.</p>
+          </div>
+        </div>
+        <form id="accountForm" class="stack-form">
+          <div class="form-grid">
+            <input name="phoneNumber" placeholder="Telefon numarası (90...) *" required>
+            <input name="label" id="accountLabelInput" placeholder="Hesap adı (opsiyonel)" class="staff-hidden-field">
+            <select name="userId" id="accountUserSelect" class="staff-hidden-field"></select>
+          </div>
+          <button id="accountSubmitBtn">Hesabı bağla</button>
         </form>
         <div id="accountList" class="grid"></div>
       </section>
 
-      <section id="templates" class="view hidden">
-        <div class="section-title">
+      <section id="templates" class="view page-view hidden">
+        <div class="section-title page-header">
           <div>
             <h3>Hazır mesaj şablonları</h3>
-            <p>Departman bazlı kullanılacak hızlı cevap ve satış metinlerini yönetin.</p>
+            <p id="templatesHelp">Departman bazlı kullanılacak hızlı cevap ve satış metinlerini yönetin.</p>
           </div>
         </div>
         <form id="templateForm" class="stack-form">
           <input name="title" placeholder="Şablon başlığı" required>
           <select name="departmentId" id="templateDepartmentSelect"></select>
           <textarea name="body" placeholder="Şablon metni. Örn: Merhaba {{müşteri_adı}}" required></textarea>
+          <div class="meta-row">
+            <input name="metaTemplateName" placeholder="Meta onaylı şablon adı (Cloud API için, opsiyonel)">
+            <input name="language" placeholder="Dil kodu (varsayılan: tr)">
+          </div>
           <button>Şablon ekle</button>
         </form>
         <div id="templateList" class="grid"></div>
       </section>
 
-      <section id="users" class="view hidden">
-        <div class="section-title">
+      <section id="staffAudit" class="view page-view hidden">
+        <div class="section-title page-header">
+          <div>
+            <h3>Personel Denetim</h3>
+            <p>Son görülme; personelin panelde son etkileşiminden (tıklama, yazma, mesaj, sohbet) bu yana geçen süredir.</p>
+          </div>
+        </div>
+        <div id="staffAuditSummary" class="staff-audit-summary"></div>
+        <div id="staffAuditFilter" class="staff-ops-filter"></div>
+        <div class="staff-audit-toolbar">
+          <div class="staff-audit-legend">
+            <span class="audit-legend-item ok">Aktif</span>
+            <span class="audit-legend-item warn">Uzun süredir yok</span>
+            <span class="audit-legend-item risk">Hata var</span>
+          </div>
+          <div class="staff-audit-view-toggle" role="tablist" aria-label="Görünüm">
+            <button type="button" class="active" data-audit-view="cards" role="tab" aria-selected="true">Kartlar</button>
+            <button type="button" data-audit-view="table" role="tab" aria-selected="false">Tablo</button>
+          </div>
+        </div>
+        <div class="staff-audit-list-head" id="staffAuditCardsHead">
+          <h4>Personel kartları</h4>
+          <p>Mesajlaşma ve panel aktivitesi özetleri</p>
+        </div>
+        <div id="staffAuditCards" class="staff-audit-grid"></div>
+        <div class="staff-audit-list-head hidden" id="staffAuditTableHead">
+          <h4>Personel tablosu</h4>
+          <p>Tüm metrikler tek satırda</p>
+        </div>
+        <div id="staffAuditTable" class="staff-audit-table-wrap hidden"></div>
+      </section>
+
+      <section id="users" class="view page-view hidden">
+        <div class="section-title page-header">
           <div>
             <h3>Kullanıcı yönetimi</h3>
-            <p>Admin, yönetici, denetçi ve personel kullanıcılarını buradan yönetin.</p>
+            <p>Kullanıcı ekleyin; şifre değiştirin, pasife alın veya kalıcı olarak silin.</p>
           </div>
         </div>
         <form id="userForm" class="user-create-card">
@@ -164,11 +261,54 @@
           </div>
           <button class="wide-action">Kullanıcı ekle</button>
         </form>
+        <div class="panel-search-bar">
+          <label class="panel-search">
+            <span>Personel ara</span>
+            <input type="search" id="userSearchInput" placeholder="Ad, kullanıcı adı veya rol..." autocomplete="off">
+          </label>
+        </div>
         <div id="userList" class="user-grid"></div>
       </section>
 
-      <section id="departments" class="view hidden">
-        <div class="section-title">
+      <div id="userPasswordModal" class="modal hidden" aria-hidden="true">
+        <div class="modal-backdrop" data-close-user-password></div>
+        <div class="modal-card" role="dialog" aria-labelledby="userPasswordModalTitle">
+          <div class="modal-head">
+            <div>
+              <span class="eyebrow-dark">Kullanıcı şifresi</span>
+              <h4 id="userPasswordModalTitle">Şifre değiştir</h4>
+              <p id="userPasswordModalDesc"></p>
+            </div>
+            <button type="button" class="ghost" data-close-user-password>✕</button>
+          </div>
+          <form id="userPasswordForm" class="modal-form">
+            <input type="hidden" id="userPasswordUserId" name="userId">
+            <div class="password-control">
+              <input name="password" id="userPasswordModalInput" placeholder="Yeni şifre" autocomplete="new-password" minlength="8" required>
+              <button type="button" id="generatePasswordModal" class="ghost mini">Oto üret</button>
+            </div>
+            <div class="modal-actions">
+              <button type="button" class="ghost" data-close-user-password>İptal</button>
+              <button type="submit">Şifreyi kaydet</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <section id="auditLogs" class="view page-view hidden">
+        <div class="section-title page-header">
+          <div>
+            <h3>Denetim günlüğü</h3>
+            <p>Kullanıcı işlemleri, giriş/çıkış ve sistem olayları.</p>
+          </div>
+        </div>
+        <div id="auditLogFilter" class="staff-ops-filter audit-log-filter"></div>
+        <div id="auditLogMeta" class="audit-log-meta"></div>
+        <div id="auditLogTable" class="audit-log-table-wrap"></div>
+      </section>
+
+      <section id="departments" class="view page-view hidden">
+        <div class="section-title page-header">
           <div>
             <h3>Departmanlar</h3>
             <p>Yetki kapsamı ve operasyon ayrımı için departmanlarınızı düzenleyin.</p>
@@ -178,14 +318,88 @@
           <input name="name" placeholder="Departman adı" required>
           <button>Departman ekle</button>
         </form>
+        <div class="panel-search-bar" id="departmentAdminTools">
+          <button type="button" class="secondary" id="restoreBackupBtn">Son yedekten geri yükle</button>
+        </div>
         <div id="departmentList" class="grid"></div>
       </section>
     </section>
   </main>
 
+  <div id="templateEditModal" class="modal hidden" aria-hidden="true">
+    <div class="modal-backdrop" data-close-template-edit></div>
+    <div class="modal-card" role="dialog">
+      <div class="modal-head">
+        <h4>Şablon düzenle</h4>
+      </div>
+      <form id="templateEditForm" class="modal-form stack-form">
+        <input type="hidden" id="templateEditId">
+        <input id="templateEditTitle" placeholder="Başlık" required>
+        <textarea id="templateEditBody" placeholder="Şablon metni" required></textarea>
+        <input id="templateEditMeta" placeholder="Meta şablon adı (opsiyonel)">
+        <input id="templateEditLang" placeholder="Dil (tr)">
+        <div class="modal-actions">
+          <button type="button" class="ghost" data-close-template-edit>İptal</button>
+          <button type="submit">Kaydet</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="accountEditModal" class="modal hidden" aria-hidden="true">
+    <div class="modal-backdrop" data-close-account-edit></div>
+    <div class="modal-card" role="dialog">
+      <div class="modal-head">
+        <h4>Hesap düzenle</h4>
+      </div>
+      <form id="accountEditForm" class="modal-form stack-form">
+        <input type="hidden" id="accountEditId">
+        <input id="accountEditLabel" placeholder="Takma ad" required>
+        <input id="accountEditPhone" placeholder="Telefon numarası" required>
+        <input id="accountEditCloudId" placeholder="Meta Phone Number ID (opsiyonel)">
+        <div class="modal-actions">
+          <button type="button" class="ghost" data-close-account-edit>İptal</button>
+          <button type="submit">Kaydet</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="departmentEditModal" class="modal hidden" aria-hidden="true">
+    <div class="modal-backdrop" data-close-department-edit></div>
+    <div class="modal-card" role="dialog">
+      <div class="modal-head">
+        <h4>Departman düzenle</h4>
+      </div>
+      <form id="departmentEditForm" class="modal-form stack-form">
+        <input type="hidden" id="departmentEditId">
+        <input id="departmentEditName" placeholder="Departman adı" required>
+        <label><input type="checkbox" id="departmentEditActive"> Aktif</label>
+        <div class="modal-actions">
+          <button type="button" class="ghost" data-close-department-edit>İptal</button>
+          <button type="submit">Kaydet</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="confirmModal" class="modal hidden" aria-hidden="true">
+    <div class="modal-backdrop" id="confirmModalBackdrop"></div>
+    <div class="modal-card" role="dialog">
+      <div class="modal-head">
+        <h4>Onay</h4>
+        <p id="confirmModalText"></p>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="ghost" id="confirmModalCancel">İptal</button>
+        <button type="button" class="danger" id="confirmModalOk">Onayla</button>
+      </div>
+    </div>
+  </div>
+
   <audio id="notifySound" preload="auto">
     <source src="data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAESsAACJWAAACABAAZGF0YQAAAAA=" type="audio/wav">
   </audio>
-  <script src="/app.js"></script>
+  <script type="module" src="/js/app/main.js"></script>
 </body>
 </html>

@@ -32,9 +32,10 @@ async function verifyPassword(password, storedHash) {
   return expected.length === candidate.length && crypto.timingSafeEqual(expected, candidate);
 }
 
-function createToken(userId, secret, ttlMs = 1000 * 60 * 60 * 12) {
+function createToken(userId, secret, tokenVersion = 0, ttlMs = 1000 * 60 * 60 * 12) {
   const payload = base64url(JSON.stringify({
     sub: userId,
+    tv: Number(tokenVersion) || 0,
     exp: Date.now() + ttlMs,
     jti: crypto.randomUUID()
   }));

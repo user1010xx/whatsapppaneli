@@ -16,7 +16,13 @@ const { login, request, startTestServer } = require('./helpers');
     assert.ok(templates.data.templates.length >= 1);
     const reports = await request(app.baseUrl, 'GET', '/api/reports', null, cookie);
     assert.equal(typeof reports.data.reports.users, 'number');
-    console.log('Smoke test başarılı: login, listeleme, şablon ve rapor uçları çalışıyor.');
+    const health = await request(app.baseUrl, 'GET', '/health');
+    assert.equal(health.response.status, 200);
+    assert.equal(health.data.ok, true);
+    const auditLogs = await request(app.baseUrl, 'GET', '/api/audit-logs?limit=5', null, cookie);
+    assert.equal(auditLogs.response.status, 200);
+    assert.ok(Array.isArray(auditLogs.data.logs));
+    console.log('Smoke test başarılı: login, listeleme, şablon, rapor, health ve denetim günlüğü çalışıyor.');
   } finally {
     await app.close();
   }

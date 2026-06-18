@@ -1,115 +1,118 @@
 # WhatsApp Personel Takip ve İletişim Paneli
 
-Bu proje, çağrı merkezi personellerinin QR ile bir veya birden fazla WhatsApp oturumu bağlayabildiği, WhatsApp Web benzeri arayüzden müşteriyle iletişim kurabildiği, admin/yönetici/denetçi rollerinin departman bazlı takip ve raporlama yapabildiği kalıcı veri odaklı bir paneldir.
+Meta **WhatsApp Cloud API** tabanlı, çok kullanıcılı personel takip ve iletişim paneli.
 
-## Kapsam
+## Özellikler
 
-- Kullanıcı adı/şifre ile giriş
-- Admin, yönetici, denetçi ve personel rolleri
-- Departman bazlı yetki kontrolü
-- Personelin birden fazla WhatsApp hesabı eklemesi
-- QR bekliyor / bağlı / bağlantı kesildi durumları
-- WhatsApp Web benzeri sohbet ekranı
-- Hazır şablon seçerek mesaj gönderme
-- Manuel mesajlaşma
-- Personelin mesaj silememesi
-- Tüm mesajlaşmaların kalıcı olarak saklanması
-- Admin/yönetici/denetçinin departman yetkisine göre personel sohbetlerine erişmesi
-- Raporlama ve denetim kayıtları
-
-## Önemli teknik not
-
-Bu uygulama resmi Meta Business API kullanmaz. Mimari, QR tabanlı WhatsApp Web oturum sağlayıcısı bağlanacak şekilde tasarlanmıştır. Varsayılan çalışma modu `mock` sağlayıcıdır; bu sayede panel, yetkiler, sohbet, QR akışı, raporlar ve testler dış bağımlılık olmadan çalışır. Gerçek WhatsApp Web entegrasyonu için `src/whatsapp/baileysProvider.js` dosyasındaki sağlayıcı tamamlanmaya hazır adaptör olarak bırakılmıştır.
+- Kullanıcı adı/şifre ile giriş, rol tabanlı yetki (admin, yönetici, denetçi, personel)
+- Departman kapsamlı RBAC
+- Cloud API üzerinden mesajlaşma (24 saat penceresi + şablon kuralları)
+- Canlı sohbet, personel denetim, denetim günlüğü
+- JSON (yerel) veya PostgreSQL (Railway) depolama + otomatik yedekleme
+- Redis tabanlı rate limiting ve paylaşımlı webhook kuyruğu (yoksa bellek modu)
+- Webhook imza doğrulama, idempotency ve dead-letter
+- TOTP 2FA (API; arayüz ayrı eklenebilir)
+- Postgres modunda mesaj/sohbet arama indeks tabloları
 
 ## Kurulum
 
 ```bash
-npm install
 npm start
 ```
 
-Uygulama varsayılan olarak şu adreste açılır:
+Varsayılan adres: http://localhost:3000
 
-[http://localhost:3000](http://localhost:3000)
+**İlk admin:** Ortam değişkenleriyle oluşturulur (`ADMIN_USERNAME`, `ADMIN_PASSWORD`). Panel otomatik test kullanıcısı eklemez. Yerel sıfırlama: `node scripts/reset-panel-data.js`
 
-İlk admin bilgileri:
+## Ortam değişkenleri
 
-- Kullanıcı adı: `admin`
-- Şifre: `admin123`
+| Değişken | Açıklama |
+|----------|----------|
+| `PORT` | Sunucu portu (varsayılan 3000) |
+| `DATABASE_URL` | PostgreSQL bağlantısı (Railway; set edilirse kalıcı DB) |
+| `REDIS_URL` | Redis bağlantısı (rate limit; opsiyonel) |
+| `DATA_FILE` | JSON veri dosyası (DATABASE_URL yoksa) |
+| `MEDIA_DIR` | Medya dosyaları (Railway volume önerilir) |
+| `TRUST_PROXY` | Reverse proxy arkasında `1` (varsayılan kapalı) |
+| `WEBHOOK_MAX_BYTES` | Webhook POST gövde sınırı (varsayılan 256 KB) |
+| `DATABASE_SSL_REJECT_UNAUTHORIZED` | Postgres SSL sertifika doğrulaması (`1` = sıkı) |
+| `MAX_MEDIA_BYTES` | Medya yükleme üst sınırı (varsayılan 32 MB) |
+| `SESSION_SECRET` | Oturum imzası (prod zorunlu) |
+| `ADMIN_USERNAME` | İlk admin kullanıcı adı (prod zorunlu) |
+| `ADMIN_PASSWORD` | İlk admin şifresi — min 8 karakter, büyük/küçük/rakam (prod zorunlu) |
+| `ADMIN_FULL_NAME` | İlk admin görünen adı (opsiyonel) |
+| `CLOUD_API_ACCESS_TOKEN` | Meta access token |
+| `CLOUD_API_PHONE_NUMBER_ID` | Meta phone number id |
+| `CLOUD_API_APP_SECRET` | Webhook imza doğrulama |
+| `PERSIST_SECRETS_IN_STORE` | `0` ise token JSON'a yazılmaz (prod varsayılan `0`) |
+| `CLOUD_API_GRAPH_VERSION` | Meta Graph API sürümü (varsayılan `v21.0`) |
+| `REQUIRE_WEBHOOK_SIGNATURE` | `1` ise webhook imzası zorunlu |
+| `AUDIT_LOG_MAX` | Saklanacak maksimum denetim kaydı |
+| `MEDIA_MAX_AGE_DAYS` | Medya dosyası saklama süresi |
+| `NODE_ENV=production` | Üretim güvenlik kontrolleri |
 
-Ortam değişkenleriyle değiştirilebilir:
+## Webhook
 
-```bash
-ADMIN_USERNAME=yonetici ADMIN_PASSWORD=guclu-sifre npm start
-```
-
-Windows PowerShell için:
-
-```powershell
-$env:ADMIN_USERNAME="yonetici"; $env:ADMIN_PASSWORD="guclu-sifre"; npm start
-```
-
-## Veri saklama
-
-Varsayılan veri dosyası:
+Meta Developer Console'da webhook URL:
 
 ```text
-data/app.json
+https://<domain>/webhook/whatsapp
 ```
 
-Farklı dosya için:
+## Railway dağıtımı
 
-```bash
-DATA_FILE=/path/to/app.json npm start
-```
+1. Railway'de yeni proje oluşturun, bu repoyu bağlayın.
+2. **PostgreSQL** eklentisi ekleyin → `DATABASE_URL` otomatik gelir.
+3. **Redis** eklentisi ekleyin (önerilir) → `REDIS_URL` otomatik gelir.
+4. Ortam değişkenlerini ayarlayın (`railway.env.example`):
+   - `SESSION_SECRET` (güçlü rastgele değer)
+   - `ADMIN_USERNAME` ve `ADMIN_PASSWORD` (güçlü şifre; ilk deploy'da tek admin oluşur)
+   - `NODE_ENV=production`
+   - `TRUST_PROXY=1`
+   - `MEDIA_DIR=/data/media` (volume mount ile)
+5. Medya kalıcılığı için volume ekleyip `/data/media` yoluna bağlayın.
+6. Deploy sonrası health: `https://<domain>/health`
 
-## Roller
+`railway.toml` health check ve start komutunu içerir.
 
-### Admin
-
-- Tüm departmanları, kullanıcıları, WhatsApp hesaplarını, sohbetleri ve raporları görebilir
-- Kullanıcı/departman/şablon yönetebilir
-- Personel adına mesaj gönderebilir
-- Mesajı panelde gizleyebilir; fiziksel kayıt silinmez
-
-### Yönetici
-
-- Sadece kendi departmanını yönetebilir
-- Kendi departmanındaki personelleri ve mesajlaşmaları görebilir
-- Kendi departmanı için kullanıcı ve şablon yönetebilir
-- Kendi departmanı adına işlem ve mesaj gönderimi yapabilir
-
-### Denetçi
-
-- Hangi departmanda oluşturulduysa sadece o departmanın personellerini görebilir
-- O departmanın WhatsApp hesaplarını, sohbetlerini ve mesajlarını takip edebilir
-- Departman kapsamındaki sohbetlerde işlem sağlayabilir ve mesaj gönderebilir
-- Kullanıcı, departman veya şablon yönetemez
-
-### Personel
-
-- Kendi WhatsApp hesaplarını ekleyebilir
-- QR ile bağlantı başlatabilir
-- Kendi hesaplarındaki sohbetleri görebilir
-- Şablon seçip mesaj gönderebilir
-- Manuel mesaj gönderebilir
-- Mesaj silemez
-
-## Test ve smoke
+## Test
 
 ```bash
 npm test
 npm run smoke
+npm run e2e:install
+npm run e2e
 ```
 
-## Canlı entegrasyon notları
+## Roller
 
-Gerçek WhatsApp QR entegrasyonu için önerilen sıradaki çalışma:
+- **Admin:** Tam yetki, KVKK veri silme/dışa aktarma
+- **Yönetici:** Kendi departmanı, personel denetim, Cloud API ayarları
+- **Denetçi:** Departman personelini izleme ve mesajlaşma (personel denetim raporu yok)
+- **Personel:** Kendi hesapları ve sohbetleri
 
-1. `WHATSAPP_PROVIDER=baileys` modunu etkinleştirmek
-2. `@whiskeysockets/baileys` paketini projeye eklemek
-3. Oturum klasörünü kalıcı diske bağlamak
-4. Sunucuda tekil process veya queue/worker mimarisiyle WhatsApp oturumlarını yönetmek
-5. Yedekleme ve KV/DB kilitleme mekanizması eklemek
+## Veri
 
-Bu temel panel bu entegrasyona hazır provider mimarisiyle oluşturulmuştur.
+**Yerel (JSON):**
+- Ana dosya: `data/app.json`
+- Yedekler: `data/backups/`
+
+**Railway (PostgreSQL):**
+- `DATABASE_URL` ile tüm uygulama durumu `app_state` tablosunda
+- Yedekler: `app_backups` tablosu
+- Performans: `app_messages_index` ve `app_conversations_index` (otomatik senkron)
+
+**Medya:** `MEDIA_DIR` (Railway'de volume kullanın)
+
+PostgreSQL + Redis ile çoklu instance güvenlidir (webhook kuyruğu ve rate limit paylaşımlı). JSON modunda tek process çalıştırın.
+
+## Health
+
+`GET /health` yanıtında `rateLimitBackend` (`redis` / `memory`) ve `rateLimitDegraded` (Redis düşünce `true`) alanları bulunur.
+
+## 2FA (API)
+
+- `POST /api/auth/2fa/setup` — kurulum başlat
+- `POST /api/auth/2fa/verify` — `{ "code": "123456" }` ile etkinleştir
+- `POST /api/auth/2fa/disable` — `{ "password": "..." }` ile kapat
+- Login: 2FA açık kullanıcılar için `{ "username", "password", "totpCode" }`

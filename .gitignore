@@ -4,3 +4,8 @@ coverage/
 .env
 .DS_Store
 *.log
+test-results/
+terminals/
+live-*.txt
+del-result.txt
+$null

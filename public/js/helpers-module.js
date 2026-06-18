@@ -1,0 +1,1 @@
+export { escapeHtml, normalizeSearchQuery } from './shared/escape.js';

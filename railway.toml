@@ -1,0 +1,16 @@
+[build]
+builder = "NIXPACKS"
+
+[deploy]
+startCommand = "npm start"
+healthcheckPath = "/health"
+healthcheckTimeout = 120
+restartPolicyType = "ON_FAILURE"
+restartPolicyMaxRetries = 5
+
+# İlk kurulum:
+# 1. PostgreSQL + Redis eklentisi
+# 2. Volume → /data/media
+# 3. railway.env.example → Variables (ADMIN_USERNAME, ADMIN_PASSWORD, SESSION_SECRET zorunlu)
+# 4. İlk deploy boş DB'de tek admin oluşturur; test profili eklenmez
+# 5. /health → storeKind: "postgres"

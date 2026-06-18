@@ -12,14 +12,21 @@ async function startTestServer(name = 'test') {
     sessionSecret: `secret-${name}`,
     adminUsername: 'admin',
     adminPassword: 'admin123',
-    whatsappProvider: 'mock'
+    cloudApi: {
+      accessToken: 'test-token',
+      phoneNumberId: '123456789',
+      webhookVerifyToken: 'verify-123',
+      skipHealthPing: true
+    },
+    cloudApiSkipHealthPing: true
   });
   await new Promise((resolve) => app.server.listen(0, resolve));
   const baseUrl = `http://127.0.0.1:${app.server.address().port}`;
   async function close() {
+    app.eventHub.close();
     await new Promise((resolve) => app.server.close(resolve));
   }
-  return { ...app, baseUrl, close, dataFile };
+  return { ...app, baseUrl, close, dataFile, directory };
 }
 
 async function request(baseUrl, method, pathName, body, cookie) {
